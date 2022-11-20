@@ -1,25 +1,28 @@
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { LandingPage } from './page/home/index';
+import { LoginPage } from './page/account/login';
+import { LANDING_PAGE, LOGIN_PAGE, ACCOUNT_PAGE, LOCATION_PAGE, BOOKING_PAGE, NOTIFICATION_PAGE } from './common/constant';
+import { LocationPage } from './page/location/index';
+import { AccountPage } from './page/account/index';
+import { NotificationPage } from './page/notification/index';
+import { BookingPage } from './page/booking/index';
+
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    return (
+        <BrowserRouter>
+            <Routes>
+                <Route path={LANDING_PAGE} element={<LandingPage />} exact />
+                <Route path={ACCOUNT_PAGE} element={<AccountPage />} />
+                <Route path={LOCATION_PAGE} element={<LocationPage />} />
+                <Route path={BOOKING_PAGE} element={<BookingPage />} />
+                <Route path={NOTIFICATION_PAGE} element={<NotificationPage />} />
+                <Route path={LOGIN_PAGE} element={<LoginPage />} />
+            </Routes>
+        </BrowserRouter>
+    )
 }
 
 export default App;
