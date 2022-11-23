@@ -3,11 +3,17 @@ import { getAPIConfig } from "./config"
 import { BASE_URL } from "../common/constant"
 
 export const notificationAPI = {
-    search: async () => {
-        const response = await axios.get(`${BASE_URL}/notifications`, getAPIConfig())
+    search: async (params = {}) => {
+        let q = []
+        for (const key in params) {
+            q.push(`${key}=${params[key]}`)
+        }
+        let queries = q.join('&')
+
+        const response = await axios.get((q.length === 0) ? `${BASE_URL}/notifications` : `${BASE_URL}/notifications&${queries}`, getAPIConfig())
         return response.data.data
     },
-    done: async (notificationID) => {
-        await axios.post(`${BASE_URL}/notifications/${notificationID}/seen`, getAPIConfig())
+    seen: async (notificationID) => {
+        await axios.put(`${BASE_URL}/notifications/${notificationID}/seen`, null, getAPIConfig())
     },
 }

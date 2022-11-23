@@ -7,13 +7,13 @@ export const bookingAPI = {
         await axios.post(`${BASE_URL}/bookings`, payload, getAPIConfig())
     },
     accept: async (bookingID) => {
-        await axios.post(`${BASE_URL}/bookings/${bookingID}/accept`, getAPIConfig())
+        await axios.post(`${BASE_URL}/bookings/${bookingID}/accept`, {}, getAPIConfig())
     },
     reject: async (bookingID) => {
-        await axios.post(`${BASE_URL}/bookings/${bookingID}/reject`, getAPIConfig())
+        await axios.post(`${BASE_URL}/bookings/${bookingID}/reject`, {}, getAPIConfig())
     },
     done: async (bookingID) => {
-        await axios.post(`${BASE_URL}/bookings/${bookingID}/done`, getAPIConfig())
+        await axios.post(`${BASE_URL}/bookings/${bookingID}/done`, {}, getAPIConfig())
     },
     search: async () => {
         const response = await axios.get(`${BASE_URL}/bookings`, getAPIConfig())

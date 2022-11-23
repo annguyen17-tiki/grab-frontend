@@ -49,7 +49,7 @@ export const LoginPage = () => {
             onFinish={onLogin}
             onFinishFailed={onSubmitFailed}
             autoComplete="off"
-            style={{padding: "100px 20%"}}
+            style={{ padding: "100px 20%" }}
         >
             <Form.Item
                 label="Username"

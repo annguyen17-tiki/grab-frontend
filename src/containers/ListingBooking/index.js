@@ -1,20 +1,55 @@
-import React, { useEffect } from 'react';
-import {
-    // BrowserRouter as Router,
-    Routes,
-    Route,
-    Link,
-} from "react-router-dom";
-
-import { Button, Layout, Menu } from 'antd';
-import { BarsOutlined, UserOutlined, AuditOutlined } from '@ant-design/icons';
-import { LOCATION_PAGE, BOOKING_PAGE, NOTIFICATION_PAGE, ACCOUNT_PAGE } from '../../common/constant';
-import { accountAPI } from '../../api/account';
+import React, { useEffect, useState } from 'react';
+import { Descriptions, List, Button, notification } from 'antd';
+import { formatTime, formatBookingStatus, formatAccountName } from '../../common/helper'
+import { bookingAPI } from '../../api/booking';
+import Title from 'antd/es/typography/Title';
+import { BOOKING_PAGE } from '../../common/constant';
 
 
 
 export const ListingBookingContainer = () => {
+    const [bookings, setBookings] = useState([])
+
+    useEffect(() => {
+        bookingAPI.search()
+            .then(response => setBookings(response))
+            .catch(() => notification.error({ message: 'Có lỗi xảy ra' }))
+    }, [])
+
     return (
-        'Hello Booking Container'
+        <>
+            <Title>Lịch sử đặt xe</Title>
+            <List
+                itemLayout='horizontal'
+                dataSource={bookings}
+                renderItem={booking => (
+                    <List.Item
+                        extra={<DetailButton booking={booking} />}
+                    >
+                        <Descriptions
+                            layout="horizontal"
+                            column={4}
+                        >
+                            <Descriptions.Item label='Người dùng'>{formatAccountName(booking.user)}</Descriptions.Item>
+                            <Descriptions.Item label='Tài xế'>{booking.driver ? formatAccountName(booking.driver) : 'Không có'}</Descriptions.Item>
+                            <Descriptions.Item label='Trạng thái'>{formatBookingStatus(booking.status)}</Descriptions.Item>
+                            <Descriptions.Item label='Ngày'>{formatTime(booking.created_at)}</Descriptions.Item>
+                        </Descriptions>
+                    </List.Item>
+                )}
+            />
+        </>
+    )
+}
+
+
+const DetailButton = ({ booking }) => {
+    return (
+        <Button
+            type='primary'
+            onClick={() => window.location.href = `${BOOKING_PAGE}/${booking.id}`}
+        >
+            Chi tiết
+        </Button>
     )
 }
