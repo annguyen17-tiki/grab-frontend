@@ -4,7 +4,7 @@ import { accountAPI } from "../../api/account"
 import { REQUIRED } from '../../common/validation';
 import '../../App.css';
 import { AccountForm } from './form';
-import { LANDING_PAGE } from '../../common/constant';
+import { ACCOUNT_PAGE } from '../../common/constant';
 
 
 export const LoginPage = () => {
@@ -13,7 +13,7 @@ export const LoginPage = () => {
     const onLogin = (values) => {
         accountAPI.login(values).then(token => {
             localStorage.setItem('token', token);
-            window.location.href = LANDING_PAGE
+            window.location.href = ACCOUNT_PAGE
         }).catch(err => console.error(err))
     };
 

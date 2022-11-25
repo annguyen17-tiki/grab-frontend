@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Col, List, notification, Row, Space } from 'antd';
+import { Button, List, notification } from 'antd';
 import { notificationAPI } from '../../api/notification';
 import Title from 'antd/es/typography/Title';
 import { Link } from 'react-router-dom';

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Button, Form, Input, notification } from 'antd';
 import Title from "antd/es/typography/Title"
 import { accountAPI } from '../../api/account';
-import { REQUIRED } from '../../common/validation';
 import { formatRole } from '../../common/helper';
 import { saveFCMToken } from '../../common/firebase';
 
@@ -43,14 +42,14 @@ export const AccountSettingContainer = () => {
                 <Form.Item
                     name="firstname"
                     label="Tên"
-                    rules={[REQUIRED]}
+                    required
                 >
                     <Input />
                 </Form.Item>
                 <Form.Item
                     name="lastname"
                     label="Họ"
-                    rules={[REQUIRED]}
+                    required
                 >
                     <Input />
                 </Form.Item>
@@ -58,7 +57,7 @@ export const AccountSettingContainer = () => {
                     name="role"
                     label="Vai trò"
                 >
-                    <Input />
+                    <Input disabled />
                 </Form.Item>
                 <Button
                     type='primary'
