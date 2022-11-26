@@ -85,8 +85,8 @@ export const DetailBookingContainer = () => {
             <Title>Thông tin Chuyến xe</Title>
             <Form
                 form={form}
-                labelCol={{ span: 4 }}
-                wrapperCol={{ span: 18 }}
+                labelCol={{ span: 5 }}
+                wrapperCol={{ span: 17 }}
                 style={{ padding: '20px 0px' }}
                 layout="horizontal"
                 name="form_in_modal"
@@ -140,7 +140,7 @@ export const DetailBookingContainer = () => {
                 {displayAcceptButton(booking, account) &&
                     <div>
                         <Form.Item
-                            wrapperCol={{ offset: 4, span: 16 }}
+                            wrapperCol={{ offset: 5, span: 16 }}
                         >
                             <Button
                                 type='primary'
@@ -154,7 +154,7 @@ export const DetailBookingContainer = () => {
                 {displayDoneButton(booking, account) &&
                     <div>
                         <Form.Item
-                            wrapperCol={{ offset: 4, span: 16 }}
+                            wrapperCol={{ offset: 5, span: 16 }}
                         >
                             <Button
                                 type='primary'

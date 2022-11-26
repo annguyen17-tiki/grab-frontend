@@ -26,7 +26,7 @@ export const DashboardLayout = ({ content, selectedKey }) => {
 
     return (
         <Layout >
-            <Sider trigger={null} collapsible>
+            <Sider breakpoint="lg" collapsedWidth="0" onCollapse={(collapsed, type) => { console.log(collapsed, type) }}>
                 <div className="logo" />
                 <Menu
                     theme="dark"
