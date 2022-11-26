@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Form, AutoComplete, notification, InputNumber } from 'antd';
+import { Button, Form, AutoComplete, notification, InputNumber, Checkbox } from 'antd';
 import { bookingAPI } from '../../api/booking';
 import Title from 'antd/es/typography/Title';
 import { geoAPI } from '../../api/geoapify';
@@ -27,6 +27,21 @@ export const HomeContainer = () => {
             .then(() => notification.success({ message: 'Đặt xe thành công' }))
             .catch(() => notification.error({ message: 'Có lỗi xảy ra' }))
     }
+
+    const vehicleOptions = [
+        {
+            label: 'Xe gắn máy',
+            value: 'motor',
+        },
+        {
+            label: 'Taxi 4 chỗ',
+            value: 'car4',
+        },
+        {
+            label: 'Taxi 7 chỗ',
+            value: 'car7',
+        },
+    ]
 
     return (
         <>
@@ -70,6 +85,13 @@ export const HomeContainer = () => {
                             setOptions([])
                         }}
                     />
+                </Form.Item>
+                <Form.Item
+                    name='vehile'
+                    label='Phương tiện'
+                    required
+                >
+                    <Checkbox.Group options={vehicleOptions} />
                 </Form.Item>
                 <Form.Item
                     name='from_latitude'
