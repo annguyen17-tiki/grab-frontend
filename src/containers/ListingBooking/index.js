@@ -16,12 +16,23 @@ export const ListingBookingContainer = () => {
             .catch(() => notification.error({ message: 'Có lỗi xảy ra' }))
     }, [])
 
+    const DetailButton = ({ booking }) => (
+        <Button
+            type='primary'
+            onClick={() => window.location.href = `${BOOKING_PAGE}/${booking.id}`}
+        >
+            Chi tiết
+        </Button>
+    )
+
+
     return (
         <>
             <Title>Lịch sử đặt xe</Title>
             <List
                 itemLayout='horizontal'
                 dataSource={bookings}
+                pagination
                 renderItem={booking => (
                     <List.Item
                         extra={<DetailButton booking={booking} />}
@@ -30,7 +41,7 @@ export const ListingBookingContainer = () => {
                             layout="horizontal"
                             column={4}
                         >
-                            <Descriptions.Item label='Người dùng'>{formatAccountName(booking.user)}</Descriptions.Item>
+                            <Descriptions.Item label='Khách hàng'>{formatAccountName(booking.user)}</Descriptions.Item>
                             <Descriptions.Item label='Tài xế'>{booking.driver ? formatAccountName(booking.driver) : 'Không có'}</Descriptions.Item>
                             <Descriptions.Item label='Trạng thái'>{formatBookingStatus(booking.status)}</Descriptions.Item>
                             <Descriptions.Item label='Ngày'>{formatTime(booking.created_at)}</Descriptions.Item>
@@ -39,17 +50,5 @@ export const ListingBookingContainer = () => {
                 )}
             />
         </>
-    )
-}
-
-
-const DetailButton = ({ booking }) => {
-    return (
-        <Button
-            type='primary'
-            onClick={() => window.location.href = `${BOOKING_PAGE}/${booking.id}`}
-        >
-            Chi tiết
-        </Button>
     )
 }

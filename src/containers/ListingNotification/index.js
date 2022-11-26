@@ -3,6 +3,7 @@ import { Button, List, notification } from 'antd';
 import { notificationAPI } from '../../api/notification';
 import Title from 'antd/es/typography/Title';
 import { Link } from 'react-router-dom';
+import { saveFCMToken } from '../../common/firebase';
 
 
 export const ListingNotificationContainer = () => {
@@ -14,14 +15,23 @@ export const ListingNotificationContainer = () => {
             .catch(() => notification.error({ message: 'Có lỗi xảy ra' }))
     }, [])
 
-
+    const TurnOnNotiButton = () => (
+        <Button
+            onClick={() => { saveFCMToken() }}
+            type='primary'
+        >
+            Nhận thông báo
+        </Button>
+    )
 
     return (
         <>
             <Title>Thông báo</Title>
             <List
                 itemLayout='horizontal'
+                header={<TurnOnNotiButton />}
                 dataSource={notifications}
+                pagination
                 renderItem={noti => (
                     <List.Item
                         extra={<SeenButton noti={noti} />}

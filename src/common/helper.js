@@ -34,6 +34,7 @@ export const formatVehicle = (vehicle) => {
 }
 
 export const formatAccountName = (account) => {
+    if (!account) return ''
     return `${account.firstname} ${account.lastname}`
 }
 

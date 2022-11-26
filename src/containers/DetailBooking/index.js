@@ -1,4 +1,4 @@
-import { Button, Card, Descriptions, notification, Space } from "antd"
+import { Button, Form, Input, notification } from "antd"
 import Title from "antd/es/typography/Title"
 import React, { useEffect, useState } from "react"
 import { bookingAPI } from "../../api/booking"
@@ -9,33 +9,64 @@ import { accountAPI } from "../../api/account";
 export const DetailBookingContainer = () => {
     const params = useParams()
     const bookingID = params.id
+    const [form] = Form.useForm();
     const [booking, setBooking] = useState({})
     const [account, setAccount] = useState({})
-    const [disableButton, setDisableButton] = useState(false)
+    const [action, setAction] = useState('')
 
     useEffect(() => {
         bookingAPI.get(bookingID)
-            .then(response => setBooking(response))
+            .then(response => {
+                setBooking(response)
+                form.setFieldsValue({
+                    id: response.id,
+                    from_address: response.from_address,
+                    to_address: response.to_address,
+                    status: formatBookingStatus(response.status),
+                    user: formatAccountName(response.user),
+                    driver: formatAccountName(response.driver),
+                    vehicle: formatVehicle(response.vehicle)
+                })
+            })
             .catch(() => notification.error({ message: 'Có lỗi xảy ra' }))
         accountAPI.getOwn()
             .then(response => setAccount(response))
             .catch(() => notification.error({ message: 'Có lỗi xảy ra' }))
-    }, [])
+    }, [action])
 
-    if (booking.status === 'new' && account.role === 'driver') {
-        for (let i in booking.offers) {
-            if (booking.offers[i].driver_id === account.id) {
-                setDisableButton(false)
-                break;
+    const displayAcceptButton = (booking, account) => {
+        if (account.role !== 'driver') return false
+
+        if (booking.status !== 'new') return false
+
+        for (const offer of booking.offers) {
+            if (offer.driver_id === account.id) {
+                return true
             }
         }
+
+        return false
+    }
+
+    const displayDoneButton = (booking, account) => {
+        if (account.role !== 'driver') return false
+
+        if (booking.status !== 'confirm') return false
+
+        for (const offer of booking.offers) {
+            if (offer.driver_id === account.id && offer.status === 'confirm') {
+                return true
+            }
+        }
+
+        return false
     }
 
     const onAcceptBooking = () => {
         bookingAPI.accept(bookingID)
             .then(() => {
-                setDisableButton(true)
                 notification.success({ message: 'Bạn đã nhận chuyến xe thành công. Vui lòng đợi hệ thống xác nhận' })
+                setAction('accept')
             })
             .catch(() => notification.error({ message: 'Có lỗi xảy ra' }))
     }
@@ -43,8 +74,8 @@ export const DetailBookingContainer = () => {
     const onDoneBooking = () => {
         bookingAPI.done(bookingID)
             .then(() => {
-                setDisableButton(true)
                 notification.success({ message: 'Bạn đã hoàn thành chuyến xe' })
+                setAccount('done')
             })
             .catch(() => notification.error({ message: 'Có lỗi xảy ra' }))
     }
@@ -52,46 +83,89 @@ export const DetailBookingContainer = () => {
     return (
         <>
             <Title>Thông tin Chuyến xe</Title>
-            <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
-                <Card title="Thông tin đặt xe" size="medium">
-                    <Descriptions layout="horizontal" column={2}>
-                        <Descriptions.Item label="Địa điểm khởi hành" style={{ width: "100%" }}>
-                            {`(${booking.from_latitude}, ${booking.from_longitude})`}
-                        </Descriptions.Item>
-                        <Descriptions.Item label="Địa điểm đến" style={{ width: "100%" }}>
-                            {`(${booking.to_latitude}, ${booking.to_longitude})`}
-                        </Descriptions.Item>
-                        <Descriptions.Item label="Người dùng" style={{ width: "100%" }}>
-                            {booking.user ? formatAccountName(booking.user) : ''}
-                        </Descriptions.Item>
-                        <Descriptions.Item label="Tài xế" style={{ width: "100%" }}>
-                            {booking.driver ? formatAccountName(booking.driver) : 'Không có'}
-                        </Descriptions.Item>
-                        <Descriptions.Item label="Loại xe" style={{ width: "100%" }}>
-                            {booking.vehicle ? formatVehicle(booking.vehicle) : 'Không có'}
-                        </Descriptions.Item>
-                        <Descriptions.Item label="Trạng thái chuyến xe" style={{ width: "100%" }}>
-                            {formatBookingStatus(booking.status)}
-                        </Descriptions.Item>
-                    </Descriptions>
-                </Card>
-
-            </Space>
-            <Space direction="horizontal" size="middle" style={{ display: 'flex', margin: '24px 24px 24px 24px' }}>
-                <Button
-                    type='primary'
-                    disabled={disableButton}
-                    onClick={onAcceptBooking}
+            <Form
+                form={form}
+                labelCol={{ span: 4 }}
+                wrapperCol={{ span: 18 }}
+                style={{ padding: '20px 0px' }}
+                layout="horizontal"
+                name="form_in_modal"
+            >
+                <Form.Item
+                    name='id'
+                    label='Mã số chuyến đi'
                 >
-                    Nhận chuyến
-                </Button>
-                <Button
-                    disabled={disableButton}
-                    onClick={onDoneBooking}
+                    <Input readOnly />
+                </Form.Item>
+                <Form.Item
+                    name='from_address'
+                    label='Địa điểm nhận khách'
                 >
-                    Hoàn thành
-                </Button>
-            </Space>
+                    <Input readOnly />
+                </Form.Item>
+                <Form.Item
+                    name='to_address'
+                    label='Địa điểm trả khách'
+                >
+                    <Input readOnly />
+                </Form.Item>
+                <Form.Item
+                    name='user'
+                    label='Khách hàng'
+                >
+                    <Input readOnly />
+                </Form.Item>
+                <Form.Item
+                    name='status'
+                    label='Trạng thái'
+                >
+                    <Input readOnly />
+                </Form.Item>
+                {booking.driver &&
+                    <div>
+                        <Form.Item
+                            name='driver'
+                            label='Tài xế'
+                        >
+                            <Input readOnly />
+                        </Form.Item>
+                        <Form.Item
+                            name='vehicle'
+                            label='Loại xe'
+                        >
+                            <Input readOnly />
+                        </Form.Item>
+                    </div>
+                }
+                {displayAcceptButton(booking, account) &&
+                    <div>
+                        <Form.Item
+                            wrapperCol={{ offset: 4, span: 16 }}
+                        >
+                            <Button
+                                type='primary'
+                                onClick={onAcceptBooking}
+                            >
+                                Nhận chuyến
+                            </Button>
+                        </Form.Item>
+                    </div>
+                }
+                {displayDoneButton(booking, account) &&
+                    <div>
+                        <Form.Item
+                            wrapperCol={{ offset: 4, span: 16 }}
+                        >
+                            <Button
+                                type='primary'
+                                onClick={onDoneBooking}
+                            >
+                                Hoàn thành
+                            </Button>
+                        </Form.Item>
+                    </div>
+                }
+            </Form>
         </>
     )
 }

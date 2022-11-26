@@ -2,6 +2,7 @@ import { notification } from "antd";
 import { initializeApp } from "firebase/app";
 import { getMessaging, getToken } from "firebase/messaging";
 import { tokenAPI } from "../api/token";
+import { FIREBASE_VAPID_KEY } from "./constant";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAMqee9Jt8WUuQZxseakcIjZqZw-Mzstyk",
@@ -17,7 +18,7 @@ const messaging = getMessaging(app);
 
 
 export const saveFCMToken = () => {
-    getToken(messaging, { vapidKey: 'BEjv7muEaZlajUSkEc6r0QfY9GCTFPJ_RCm8s_MuYHLBD3CvPb6t_tgz0Xn3v0oRhhkOL1O-_AEUWmI-RJ-kmn0' })
+    getToken(messaging, { vapidKey: FIREBASE_VAPID_KEY })
         .then((token) => {
             if (token) {
                 tokenAPI.save(token)

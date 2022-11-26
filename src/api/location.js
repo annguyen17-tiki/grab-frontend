@@ -6,6 +6,10 @@ export const locationAPI = {
     save: async (payload) => {
         await axios.post(`${BASE_URL}/locations`, payload, getAPIConfig())
     },
+    getOwn: async () => {
+        let response = await axios.get(`${BASE_URL}/locations/me`, getAPIConfig())
+        return response.data.data
+    },
     getNeareast: async () => {
         let response = await axios.get(`${BASE_URL}/locations/nearest`, getAPIConfig())
         return response.data.data

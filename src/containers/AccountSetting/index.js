@@ -1,27 +1,29 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Button, Form, Input, notification } from 'antd';
 import Title from "antd/es/typography/Title"
 import { accountAPI } from '../../api/account';
 import { formatRole } from '../../common/helper';
-import { saveFCMToken } from '../../common/firebase';
+import { GEOAPIFY_API_KEY } from '../../common/constant';
 
 
 
 export const AccountSettingContainer = () => {
     const [form] = Form.useForm();
-    const [account, setAccount] = useState({})
 
     useEffect(() => {
+        console.log(GEOAPIFY_API_KEY)
+
         accountAPI.getOwn()
-            .then(response => setAccount(response))
+            .then(response => {
+                form.setFieldsValue({
+                    id: response.id,
+                    firstname: response.firstname,
+                    lastname: response.lastname,
+                    role: formatRole(response.role),
+                })
+            })
             .catch(() => notification.error({ message: 'Có lỗi xảy ra' }))
     }, [])
-
-    form.setFieldsValue({
-        'firstname': account.firstname,
-        'lastname': account.lastname,
-        'role': formatRole(account.role),
-    })
 
     const onSaveAccount = (payload) => {
         accountAPI.update(payload)
@@ -35,10 +37,17 @@ export const AccountSettingContainer = () => {
             <Form
                 form={form}
                 layout='horizontal'
-                labelCol={{ span: 2 }}
-                wrapperCol={{ span: 5 }}
+                labelCol={{ span: 4 }}
+                wrapperCol={{ span: 18 }}
+                style={{ padding: '20px 0px' }}
                 name="form_in_modal"
             >
+                <Form.Item
+                    name="id"
+                    label="Mã định danh"
+                >
+                    <Input disabled />
+                </Form.Item>
                 <Form.Item
                     name="firstname"
                     label="Tên"
@@ -59,21 +68,23 @@ export const AccountSettingContainer = () => {
                 >
                     <Input disabled />
                 </Form.Item>
-                <Button
-                    type='primary'
-                    onClick={() => {
-                        form.validateFields().then((value) => {
-                            form.resetFields()
-                            onSaveAccount(value)
-                        })
-                    }}
+                <Form.Item
+                    wrapperCol={{ offset: 4, span: 16 }}
                 >
-                    Lưu
-                </Button>
+                    <Button
+                        type='primary'
+                        onClick={() => {
+                            form.validateFields().then((value) => {
+                                form.resetFields()
+                                onSaveAccount(value)
+                            })
+                        }}
+                    >
+                        Lưu
+                    </Button>
+                </Form.Item>
+
             </Form>
-            <Button onClick={() => { saveFCMToken() }}>
-                Register token
-            </Button>
         </>
     )
 }
