@@ -1,6 +1,5 @@
 import React from 'react';
 import { Modal, Form, Input } from 'antd';
-import { REQUIRED } from '../../common/validation';
 
 export const AccountForm = ({ visible, onConfirm, onCancel }) => {
     const [form] = Form.useForm();
@@ -9,7 +8,7 @@ export const AccountForm = ({ visible, onConfirm, onCancel }) => {
         <Modal
             open={visible}
             title="Thông tin tài khoản"
-            okText="Lưu"
+            okText="Tạo"
             cancelText="Hủy bỏ"
             onCancel={onCancel}
             onOk={() => {
@@ -34,23 +33,21 @@ export const AccountForm = ({ visible, onConfirm, onCancel }) => {
                 <Form.Item
                     name="username"
                     label="Tên đăng nhập"
-                    rules={[REQUIRED]}
+                    required
                 >
                     <Input />
                 </Form.Item>
-
                 <Form.Item
                     name="password"
                     label="Mật khẩu"
-                    rules={[REQUIRED]}
+                    required
                 >
                     <Input.Password />
                 </Form.Item>
-
                 <Form.Item
                     name="lastname"
                     label="Họ"
-                    rules={[REQUIRED]}
+                    required
                 >
                     <Input />
                 </Form.Item>
@@ -58,48 +55,22 @@ export const AccountForm = ({ visible, onConfirm, onCancel }) => {
                 <Form.Item
                     name="firstname"
                     label="Tên"
-                    rules={[REQUIRED]}
+                    required
                 >
                     <Input />
                 </Form.Item>
-
                 <Form.Item
                     name="address"
                     label="Địa chỉ"
-                    rules={[REQUIRED]}
                 >
                     <Input />
                 </Form.Item>
-
                 <Form.Item
-                    name="license"
-                    label="Số CCHN"
+                    name="role"
+                    label="Vai trò"
+                    initialValue='user'
                 >
-                    <Input />
-                </Form.Item>
-
-                <Form.Item
-                    name="hospital"
-                    label="Bệnh viện công tác"
-                    rules={[REQUIRED]}
-                >
-                    <Input />
-                </Form.Item>
-
-                <Form.Item
-                    name="major"
-                    label="Chuyên khoa"
-                    rules={[REQUIRED]}
-                >
-                    <Input />
-                </Form.Item>
-
-                <Form.Item
-                    name="university"
-                    label="Đại học"
-                    rules={[REQUIRED]}
-                >
-                    <Input />
+                    <Input disabled />
                 </Form.Item>
             </Form>
         </Modal>

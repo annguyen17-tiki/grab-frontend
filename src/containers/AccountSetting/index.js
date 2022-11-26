@@ -3,7 +3,6 @@ import { Button, Form, Input, notification } from 'antd';
 import Title from "antd/es/typography/Title"
 import { accountAPI } from '../../api/account';
 import { formatRole } from '../../common/helper';
-import { GEOAPIFY_API_KEY } from '../../common/constant';
 
 
 
@@ -11,8 +10,6 @@ export const AccountSettingContainer = () => {
     const [form] = Form.useForm();
 
     useEffect(() => {
-        console.log(GEOAPIFY_API_KEY)
-
         accountAPI.getOwn()
             .then(response => {
                 form.setFieldsValue({
