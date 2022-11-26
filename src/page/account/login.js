@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button, notification } from 'antd';
 import { accountAPI } from "../../api/account"
-import { REQUIRED } from '../../common/validation';
 import '../../App.css';
 import { AccountForm } from './form';
 import { ACCOUNT_PAGE } from '../../common/constant';
@@ -11,10 +10,18 @@ export const LoginPage = () => {
     const [visible, setVisible] = useState(false);
 
     const onLogin = (values) => {
-        accountAPI.login(values).then(token => {
-            localStorage.setItem('token', token);
-            window.location.href = ACCOUNT_PAGE
-        }).catch(err => console.error(err))
+        accountAPI.login(values)
+            .then(token => {
+                localStorage.setItem('token', token);
+                window.location.href = ACCOUNT_PAGE
+            })
+            .catch(err => {
+                if (err.response.status === 401) {
+                    notification.error({ message: 'Tên đăng nhập hoặc mật khẩu không đúng' })
+                    return
+                }
+                notification.error({ message: 'Có lỗi xảy ra' })
+            })
     };
 
     const onSubmitFailed = (errorInfo) => {
@@ -26,7 +33,9 @@ export const LoginPage = () => {
     }
 
     const onCreateAccount = (values) => {
-        accountAPI.create(values).catch(err => console.error(err))
+        accountAPI.create(values)
+            .then(() => notification.success({ message: 'Tạo tài khoản thành công' }))
+            .catch(() => notification.error({ message: 'Có lỗi xảy ra' }))
         setVisible(false)
     }
 
@@ -54,29 +63,43 @@ export const LoginPage = () => {
             <Form.Item
                 label="Username"
                 name="username"
-                rules={[REQUIRED]}
+                required
             >
                 <Input />
             </Form.Item>
-
             <Form.Item
                 label="Password"
                 name="password"
-                rules={[REQUIRED]}
+                required
             >
                 <Input.Password />
             </Form.Item>
-
             <Form.Item
                 wrapperCol={{
                     offset: 4,
                     span: 16,
                 }}
             >
-                <Button type="primary" htmlType="submit" className="login-form-button">Đăng nhập</Button>
+                <Button
+                    type="primary"
+                    htmlType="submit"
+                    className="login-form-button"
+                >
+                    Đăng nhập
+                </Button>
             </Form.Item>
-            <Button type="link" onClick={onRegister} block>Tạo tài khoản</Button>
-            <AccountForm visible={visible} onConfirm={onCreateAccount} onCancel={onCancelModel} />
+            <Button
+                type="link"
+                onClick={onRegister}
+                block
+            >
+                Tạo tài khoản
+            </Button>
+            <AccountForm
+                visible={visible}
+                onConfirm={onCreateAccount}
+                onCancel={onCancelModel}
+            />
         </Form>
     );
 }
