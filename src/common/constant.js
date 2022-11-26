@@ -4,7 +4,7 @@ export var FIREBASE_VAPID_KEY = process.env.REACT_APP_FIREBASE_VAPID_KEY ? proce
 
 export var GEOAPIFY_BASE_URL = process.env.GEOAPIFY_BASE_URL ? process.env.GEOAPIFY_BASE_URL : 'https://api.geoapify.com'
 
-export var GEOAPIFY_API_KEY = process.env.REACT_APP_GEOAPIFY_API_KEY ? process.env.REACT_APP_GEOAPIFY_API_KEY : ''//'02a250af1d2b425fbf4c559493b4b394'
+export var GEOAPIFY_API_KEY = process.env.REACT_APP_GEOAPIFY_API_KEY ? process.env.REACT_APP_GEOAPIFY_API_KEY : ''
 
 export const LOGIN_PAGE = "/login"
 
